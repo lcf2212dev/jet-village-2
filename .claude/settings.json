@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm run build)",
+      "Bash(npm run preview)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run api:*)",
+      "Bash(npm run assets:generate:*)",
+      "Bash(npm run setup:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vitest run:*)",
+      "Bash(node .claude/hooks/:*)",
+      "Bash(curl *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect-generated-assets.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "jet-village-2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Jet Village 2 — cozy top-down pixel MMORPG; assets via OpenAI Images API",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "architecture:check": "tsx tools/check-architecture.ts",
+    "check": "npm run typecheck && npm run architecture:check && npm run test && npm run build",
+    "api": "cd api && ../.venv/bin/uvicorn main:app --reload --host 127.0.0.1 --port 8787",
+    "api:install": "python3 -m venv .venv && .venv/bin/pip install -r api/requirements.txt",
+    "assets:generate": "node tools/generate-asset.mjs",
+    "setup": "npm run api:install && npm install"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3",
+    "vitest": "^4.1.10"
+  }
+}

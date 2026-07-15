@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build / env
+dist/
+.vite/
+*.local
+.env
+.env.*
+!.env.example
+
+# Generated assets (keep directory placeholders)
+assets/generated/*
+!assets/generated/.gitkeep
+public/assets/generated/*
+!public/assets/generated/.gitkeep
+
+# Previews
+.preview/*
+!.preview/.gitkeep
+
+.claude/settings.local.json
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.log
+.coverage
+htmlcov/
+
+# Agent noise
+.hermes-sessions/
+*.session.json

@@ -1,7 +1,10 @@
 import type { TileMapData } from '../../core/contracts/asset-data';
 import { TILE_SIZE } from '../config';
 
-/** Tile ids for the procedural city tileset (color placeholders). */
+/**
+ * Tile ids for the city ground tileset (`public/assets/tiles/city.json`).
+ * Index must match sheet order: stone_a, stone_b, sidewalk, grass_a, grass_b.
+ */
 export const TileId = {
   StoneA: 0,
   StoneB: 1,

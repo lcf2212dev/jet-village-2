@@ -20,6 +20,14 @@ export const KEYMAP: Readonly<Record<string, GameAction>> = {
 export const ASSET_IDS = {
   cityMap: 'map/city',
   cityTileset: 'tileset/city',
+  cityTilesTexture: 'tex/city-tiles',
   warriorAtlas: 'atlas/warrior',
   warriorTexture: 'tex/warrior',
 } as const;
+
+/** Public URL for a path under `public/` (subpath-safe). */
+export function publicAssetUrl(relativePath: string): string {
+  const base = import.meta.env.BASE_URL;
+  const normalized = relativePath.replace(/^\/+/, '');
+  return `${base}${normalized}`;
+}

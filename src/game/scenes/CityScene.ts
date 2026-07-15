@@ -60,7 +60,14 @@ export class CityScene implements Scene {
     this.world.addSystem(new AnimationStateSystem());
     this.world.addSystem(new AnimationPlaybackSystem(this.assets));
     this.world.addSystem(new CameraSystem(this.camera));
-    this.renderSystem = new RenderSystem(this.renderer, this.map, this.camera);
+    // Ground tileset + texture must be registered by the composition root before load.
+    if (!this.assets.hasTexture(ASSET_IDS.cityTilesTexture)) {
+      throw new Error(`Missing city tiles texture: ${ASSET_IDS.cityTilesTexture}`);
+    }
+    // throws if missing
+    this.assets.tileset(ASSET_IDS.cityTileset);
+
+    this.renderSystem = new RenderSystem(this.renderer, this.map, this.camera, this.assets);
     this.world.addSystem(this.renderSystem);
 
     const weapon = getWeapon(defaultWeaponId());

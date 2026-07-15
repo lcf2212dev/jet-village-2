@@ -34,4 +34,12 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+# Env often sets ASSET_OUTPUT_DIR=public/assets/generated (relative). When uvicorn
+# runs with cwd=api/, a relative path would land under api/public/ — always root-relative.
+if not settings.asset_output_dir.is_absolute():
+    settings.asset_output_dir = (ROOT / settings.asset_output_dir).resolve()
+else:
+    settings.asset_output_dir = settings.asset_output_dir.resolve()
+if not settings.prompts_dir.is_absolute():
+    settings.prompts_dir = (ROOT / settings.prompts_dir).resolve()
 settings.asset_output_dir.mkdir(parents=True, exist_ok=True)

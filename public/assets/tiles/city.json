@@ -1,0 +1,7 @@
+{
+  "image": "city-ground.png",
+  "tileSize": 32,
+  "columns": 5,
+  "tileCount": 5,
+  "names": ["stone_a", "stone_b", "sidewalk", "grass_a", "grass_b"]
+}

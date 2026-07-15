@@ -1,22 +1,14 @@
+import type { AssetStore } from '../../core/contracts/AssetStore';
 import type { Renderer } from '../../core/contracts/Renderer';
 import type { System } from '../../core/contracts/System';
 import type { World } from '../../core/ecs/World';
 import { rect } from '../../core/math/Rect';
-import { ASSET_IDS, TILE_SIZE } from '../config';
+import { ASSET_IDS } from '../config';
 import { SpriteAnimationKey, TransformKey } from '../components';
-import { TileId } from '../world/buildCityMap';
 import type { Camera } from '../world/Camera';
 import type { TileMap } from '../world/TileMap';
 
-const TILE_COLORS: Record<number, string> = {
-  [TileId.StoneA]: '#5b6270',
-  [TileId.StoneB]: '#4c525f',
-  [TileId.Sidewalk]: '#9aa0ad',
-  [TileId.GrassA]: '#2f6b3c',
-  [TileId.GrassB]: '#3f7d46',
-};
-
-/** order 100 — draw map + entities (placeholder warrior if no texture). */
+/** order 100 — draw map tiles + entities (placeholder warrior if no texture). */
 export class RenderSystem implements System {
   readonly order = 100;
 
@@ -24,6 +16,7 @@ export class RenderSystem implements System {
     private readonly renderer: Renderer,
     private readonly map: TileMap,
     private readonly camera: Camera,
+    private readonly assets: AssetStore,
   ) {}
 
   update(_world: World, _dt: number): void {
@@ -38,20 +31,7 @@ export class RenderSystem implements System {
       height: this.camera.height,
     });
 
-    const ts = this.map.tileSize;
-    const x0 = Math.floor(this.camera.x / ts);
-    const y0 = Math.floor(this.camera.y / ts);
-    const x1 = Math.ceil((this.camera.x + this.camera.width) / ts);
-    const y1 = Math.ceil((this.camera.y + this.camera.height) / ts);
-
-    for (let ty = y0; ty <= y1; ty++) {
-      for (let tx = x0; tx <= x1; tx++) {
-        if (tx < 0 || ty < 0 || tx >= this.map.width || ty >= this.map.height) continue;
-        const id = this.map.groundAt(tx, ty);
-        const color = TILE_COLORS[id] ?? '#333';
-        this.renderer.drawRect(rect(tx * ts, ty * ts, ts, ts), color, true);
-      }
-    }
+    this.drawGround();
 
     // Entities by y for simple y-sort
     const entities = world.query(TransformKey, SpriteAnimationKey);
@@ -67,9 +47,35 @@ export class RenderSystem implements System {
       this.drawWarriorPlaceholder(t.x, t.y, anim.direction, anim.state, anim.frame);
     }
 
-    this.renderer.drawText('Jet Village 2 · 0.1.0', 8, 14, '#eef0f2');
+    this.renderer.drawText('Jet Village 2 · 0.1.1', 8, 14, '#eef0f2');
     this.renderer.drawText('WASD move · Space attack · K death', 8, 26, '#8a92a3');
     this.renderer.end();
+  }
+
+  private drawGround(): void {
+    const tileset = this.assets.tileset(ASSET_IDS.cityTileset);
+    const ts = this.map.tileSize;
+    const tileSize = tileset.tileSize;
+    const columns = tileset.columns;
+    const tex = ASSET_IDS.cityTilesTexture;
+
+    const x0 = Math.floor(this.camera.x / ts);
+    const y0 = Math.floor(this.camera.y / ts);
+    const x1 = Math.ceil((this.camera.x + this.camera.width) / ts);
+    const y1 = Math.ceil((this.camera.y + this.camera.height) / ts);
+
+    for (let ty = y0; ty <= y1; ty++) {
+      for (let tx = x0; tx <= x1; tx++) {
+        if (tx < 0 || ty < 0 || tx >= this.map.width || ty >= this.map.height) continue;
+        const id = this.map.groundAt(tx, ty);
+        if (id < 0 || id >= tileset.tileCount) continue;
+        const col = id % columns;
+        const row = Math.floor(id / columns);
+        const src = rect(col * tileSize, row * tileSize, tileSize, tileSize);
+        const dest = rect(tx * ts, ty * ts, ts, ts);
+        this.renderer.drawSprite(tex, src, dest);
+      }
+    }
   }
 
   private drawWarriorPlaceholder(
@@ -116,8 +122,5 @@ export class RenderSystem implements System {
       '#c0c4cc',
       true,
     );
-
-    void ASSET_IDS;
-    void TILE_SIZE;
   }
 }

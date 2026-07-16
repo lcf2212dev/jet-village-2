@@ -1,0 +1,41 @@
+{
+  "image": "warrior-sword.png",
+  "frameSize": { "w": 96, "h": 96 },
+  "pivot": { "x": 48, "y": 88 },
+  "animations": {
+    "idle-down": { "row": 0, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-down": { "row": 0, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-down": { "row": 0, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-down": { "row": 0, "startFrame": 16, "frames": 4, "fps": 8, "loop": false },
+
+    "idle-down-left": { "row": 1, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-down-left": { "row": 1, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-down-left": { "row": 1, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-down-left": { "row": 1, "startFrame": 16, "frames": 4, "fps": 8, "loop": false },
+
+    "idle-left": { "row": 2, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-left": { "row": 2, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-left": { "row": 2, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-left": { "row": 2, "startFrame": 16, "frames": 4, "fps": 8, "loop": false },
+
+    "idle-right": { "row": 3, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-right": { "row": 3, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-right": { "row": 3, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-right": { "row": 3, "startFrame": 16, "frames": 4, "fps": 8, "loop": false },
+
+    "idle-up": { "row": 4, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-up": { "row": 4, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-up": { "row": 4, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-up": { "row": 4, "startFrame": 16, "frames": 4, "fps": 8, "loop": false },
+
+    "idle-up-right": { "row": 5, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-up-right": { "row": 5, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-up-right": { "row": 5, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-up-right": { "row": 5, "startFrame": 16, "frames": 4, "fps": 8, "loop": false },
+
+    "idle-down-right": { "row": 6, "startFrame": 0, "frames": 4, "fps": 4, "loop": true },
+    "walk-down-right": { "row": 6, "startFrame": 4, "frames": 6, "fps": 10, "loop": true },
+    "attack-down-right": { "row": 6, "startFrame": 10, "frames": 6, "fps": 12, "loop": false },
+    "death-down-right": { "row": 6, "startFrame": 16, "frames": 4, "fps": 8, "loop": false }
+  }
+}

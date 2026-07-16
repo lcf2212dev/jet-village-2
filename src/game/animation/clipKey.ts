@@ -25,6 +25,16 @@ export function resolveClip(
     if (has(tryV)) return tryV;
   }
 
+  // Sheet may omit one diagonal (e.g. up-left) — fall back to nearest cardinal.
+  if (direction === 'up-left') {
+    if (has(`${state}-up`)) return `${state}-up`;
+    if (has(`${state}-left`)) return `${state}-left`;
+  }
+  if (direction === 'up-right') {
+    if (has(`${state}-up`)) return `${state}-up`;
+    if (has(`${state}-right`)) return `${state}-right`;
+  }
+
   if (state === 'death' && has('death-down')) return 'death-down';
   if (has(`${state}-down`)) return `${state}-down`;
   return primary;

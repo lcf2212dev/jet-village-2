@@ -1,6 +1,6 @@
 {
   "name": "jet-village-2",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Jet Village 2 — cozy top-down pixel MMORPG; assets via OpenAI Images API",
   "type": "module",

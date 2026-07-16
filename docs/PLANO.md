@@ -13,12 +13,12 @@
 | Core ECS / platform / cena cidade | **Feito** (0.1.0 jogável) |
 | Spec **0.1.1** (tiles grama/calçada/pedra) | **Implementada** |
 | Arte OpenAI nos tiles de chão | **Feito** (tileset city-ground) |
-| Arte OpenAI no guerreiro | Pendente (placeholder na 0.1.0) |
+| Arte OpenAI no guerreiro | **Feito** (0.1.2 sheet + atlas) |
 | Netcode multiplayer | Fora da 0.1.x (roadmap 0.2+) |
 
 ## Próximos passos
 
-1. Sheet do guerreiro + atlas real (próxima versão).
+1. Ajustar mapeamento de diagonais / grid do sheet se o playtest pedir.
 2. Servidor multiplayer na 0.2.x.
 
 ## Histórico

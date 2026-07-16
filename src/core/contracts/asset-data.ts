@@ -14,12 +14,18 @@ export interface PivotPoint {
   readonly y: number;
 }
 
-/** One animation row inside a sprite atlas (spec §5.3). */
+/** One animation strip inside a sprite atlas (spec §5.3). */
 export interface AtlasAnimation {
   readonly row: number;
+  /** Number of frames in this clip (columns used). */
   readonly frames: number;
   readonly fps: number;
   readonly loop: boolean;
+  /**
+   * First column index for this clip on `row` (default 0).
+   * Lets idle/walk/attack/death share one sheet row in horizontal strips.
+   */
+  readonly startFrame?: number;
 }
 
 /** Sprite atlas contract — assets/sprites/*.json (spec §5.3). */

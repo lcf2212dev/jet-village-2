@@ -6,6 +6,7 @@ import {
   PlayerTagKey,
   SpriteAnimationKey,
   VelocityKey,
+  type AnimState,
 } from '../components';
 import { directionFromVelocity } from '../directions';
 
@@ -24,46 +25,55 @@ export class AnimationStateSystem implements System {
 
       if (intent.killPressed || (health && health.hp <= 0)) {
         if (health) health.hp = 0;
-        anim.state = 'death';
-        anim.frame = 0;
-        anim.elapsed = 0;
-        anim.clipFinished = false;
+        this.setState(anim, 'death');
         continue;
       }
 
       if (anim.state === 'attack') {
         if (anim.clipFinished) {
-          anim.state = 'idle';
-          anim.frame = 0;
-          anim.elapsed = 0;
-          anim.clipFinished = false;
+          this.setState(anim, 'idle');
         } else {
           continue;
         }
       }
 
       if (intent.attackPressed) {
-        anim.state = 'attack';
-        anim.frame = 0;
-        anim.elapsed = 0;
-        anim.clipFinished = false;
+        this.setState(anim, 'attack');
+        continue;
+      }
+
+      // Facing from intent/velocity before sit (keep last facing when sitting still)
+      const fx = intent.moveX || vel.x;
+      const fy = intent.moveY || vel.y;
+      if (Math.hypot(fx, fy) > 0.01) {
+        anim.direction = directionFromVelocity(fx, fy, anim.direction);
+      }
+
+      if (intent.sitHeld) {
+        if (anim.state !== 'sit') this.setState(anim, 'sit');
         continue;
       }
 
       const moving = Math.hypot(vel.x, vel.y) > 1 || Math.hypot(intent.moveX, intent.moveY) > 0.01;
-      const next = moving ? 'walk' : 'idle';
-      if (anim.state !== next) {
-        anim.state = next;
-        anim.frame = 0;
-        anim.elapsed = 0;
-        anim.clipFinished = false;
-      }
+      let next: AnimState = 'idle';
+      if (moving) next = intent.runHeld ? 'run' : 'walk';
 
-      anim.direction = directionFromVelocity(
-        intent.moveX || vel.x,
-        intent.moveY || vel.y,
-        anim.direction,
-      );
+      if (anim.state !== next) this.setState(anim, next);
     }
+  }
+
+  private setState(
+    anim: {
+      state: AnimState;
+      frame: number;
+      elapsed: number;
+      clipFinished: boolean;
+    },
+    next: AnimState,
+  ): void {
+    anim.state = next;
+    anim.frame = 0;
+    anim.elapsed = 0;
+    anim.clipFinished = false;
   }
 }

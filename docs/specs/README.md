@@ -19,3 +19,4 @@ docs/specs/<MAJOR>.<MINOR>.<PATCH>/<MAJOR>.<MINOR>.<PATCH>-arch.md  # arch (apó
 | ------ | ------- | ------ |
 | 0.1.0  | [`0.1.0/0.1.0.md`](0.1.0/0.1.0.md) · [`0.1.0-arch.md`](0.1.0/0.1.0-arch.md) | **Implementada** (arte placeholder) |
 | 0.1.1  | [`0.1.1/0.1.1.md`](0.1.1/0.1.1.md) · [`0.1.1-arch.md`](0.1.1/0.1.1-arch.md) | **Implementada** |
+| 0.1.2  | [`0.1.2/0.1.2.md`](0.1.2/0.1.2.md) · [`0.1.2-arch.md`](0.1.2/0.1.2-arch.md) | **Implementada** |

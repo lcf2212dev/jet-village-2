@@ -3,12 +3,16 @@ import type { Renderer } from '../../core/contracts/Renderer';
 import type { System } from '../../core/contracts/System';
 import type { World } from '../../core/ecs/World';
 import { rect } from '../../core/math/Rect';
+import { resolveClip } from '../animation/clipKey';
 import { ASSET_IDS } from '../config';
-import { SpriteAnimationKey, TransformKey } from '../components';
+import { SpriteAnimationKey, TransformKey, type SpriteAnimation } from '../components';
 import type { Camera } from '../world/Camera';
 import type { TileMap } from '../world/TileMap';
 
-/** order 100 — draw map tiles + entities (placeholder warrior if no texture). */
+/** Display height for warrior sprite in world pixels (width scales with frame aspect). */
+const WARRIOR_DRAW_H = 40;
+
+/** order 100 — draw map tiles + entities. */
 export class RenderSystem implements System {
   readonly order = 100;
 
@@ -33,7 +37,6 @@ export class RenderSystem implements System {
 
     this.drawGround();
 
-    // Entities by y for simple y-sort
     const entities = world.query(TransformKey, SpriteAnimationKey);
     entities.sort((a, b) => {
       const ta = world.require(a, TransformKey);
@@ -44,11 +47,11 @@ export class RenderSystem implements System {
     for (const entity of entities) {
       const t = world.require(entity, TransformKey);
       const anim = world.require(entity, SpriteAnimationKey);
-      this.drawWarriorPlaceholder(t.x, t.y, anim.direction, anim.state, anim.frame);
+      this.drawEntity(t.x, t.y, anim);
     }
 
-    this.renderer.drawText('Jet Village 2 · 0.1.1', 8, 14, '#eef0f2');
-    this.renderer.drawText('WASD move · Space attack · K death', 8, 26, '#8a92a3');
+    this.renderer.drawText('Jet Village 2 · 0.1.2', 8, 14, '#eef0f2');
+    this.renderer.drawText('WASD · Shift run · C sit · Space attack · K death', 8, 26, '#8a92a3');
     this.renderer.end();
   }
 
@@ -78,6 +81,37 @@ export class RenderSystem implements System {
     }
   }
 
+  private drawEntity(x: number, y: number, anim: SpriteAnimation): void {
+    if (this.assets.hasAtlas(anim.atlasId) && this.assets.hasTexture(anim.textureId)) {
+      this.drawAtlasSprite(x, y, anim);
+      return;
+    }
+    this.drawWarriorPlaceholder(x, y, anim.direction, anim.state, anim.frame);
+  }
+
+  private drawAtlasSprite(x: number, y: number, anim: SpriteAnimation): void {
+    const atlas = this.assets.atlas(anim.atlasId);
+    const key = resolveClip((k) => k in atlas.animations, anim.state, anim.direction);
+    const clip = atlas.animations[key];
+    if (!clip) {
+      this.drawWarriorPlaceholder(x, y, anim.direction, anim.state, anim.frame);
+      return;
+    }
+
+    const start = clip.startFrame ?? 0;
+    const col = start + Math.min(anim.frame, Math.max(0, clip.frames - 1));
+    const fw = atlas.frameSize.w;
+    const fh = atlas.frameSize.h;
+    const src = rect(col * fw, clip.row * fh, fw, fh);
+
+    const drawH = WARRIOR_DRAW_H;
+    const drawW = Math.round((fw / fh) * drawH);
+    const pivotX = atlas.pivot.x / fw;
+    const pivotY = atlas.pivot.y / fh;
+    const dest = rect(x - pivotX * drawW, y - pivotY * drawH, drawW, drawH);
+    this.renderer.drawSprite(anim.textureId, src, dest);
+  }
+
   private drawWarriorPlaceholder(
     x: number,
     y: number,
@@ -85,14 +119,22 @@ export class RenderSystem implements System {
     state: string,
     frame: number,
   ): void {
-    // Feet at (x,y); body above
-    const bob = state === 'walk' ? Math.sin(frame) * 1 : 0;
+    const bob = state === 'walk' || state === 'run' ? Math.sin(frame) * (state === 'run' ? 2 : 1) : 0;
     const bodyColor =
-      state === 'death' ? '#5a5666' : state === 'attack' ? '#3d7ab0' : '#2c5f8a';
-    this.renderer.drawRect(rect(x - 6, y - 20 + bob, 12, 16), bodyColor, true);
-    this.renderer.drawRect(rect(x - 4, y - 26 + bob, 8, 6), '#e8b58a', true);
+      state === 'death'
+        ? '#5a5666'
+        : state === 'attack'
+          ? '#3d7ab0'
+          : state === 'sit'
+            ? '#3a5a4a'
+            : state === 'run'
+              ? '#2a6f9a'
+              : '#2c5f8a';
+    const bodyH = state === 'sit' ? 10 : 16;
+    const bodyY = state === 'sit' ? y - 14 + bob : y - 20 + bob;
+    this.renderer.drawRect(rect(x - 6, bodyY, 12, bodyH), bodyColor, true);
+    this.renderer.drawRect(rect(x - 4, bodyY - 6, 8, 6), '#e8b58a', true);
 
-    // Facing indicator (sword stub)
     let sx = 0;
     let sy = 0;
     if (direction.includes('right')) sx = 1;

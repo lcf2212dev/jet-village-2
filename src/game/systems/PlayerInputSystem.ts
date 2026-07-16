@@ -20,6 +20,8 @@ export class PlayerInputSystem implements System {
         intent.moveY = 0;
         intent.attackPressed = false;
         intent.killPressed = false;
+        intent.runHeld = false;
+        intent.sitHeld = false;
         continue;
       }
 
@@ -32,6 +34,8 @@ export class PlayerInputSystem implements System {
       intent.moveY = axis.y;
       intent.attackPressed = this.input.wasPressed(GameAction.Attack);
       intent.killPressed = this.input.wasPressed(GameAction.KillDebug);
+      intent.runHeld = this.input.isDown(GameAction.Run);
+      intent.sitHeld = this.input.isDown(GameAction.Sit);
     }
   }
 }

@@ -1,9 +1,9 @@
 /**
- * Jet Village 2 — composition root (0.1.1 city ground tiles + warrior placeholder).
+ * Jet Village 2 — composition root (0.1.2 warrior sheet + run/sit).
  * Wires platform + game; no business logic here beyond setup.
  */
 
-import type { TilesetData } from './core/contracts/asset-data';
+import type { SpriteAtlasData, TilesetData } from './core/contracts/asset-data';
 import { GameLoop } from './core/loop/GameLoop';
 import type { Clock } from './core/contracts/Clock';
 import { SceneManager } from './core/scene/SceneManager';
@@ -22,7 +22,7 @@ if (!(canvasEl instanceof HTMLCanvasElement)) {
 }
 
 const hud = document.getElementById('hud');
-if (hud) hud.textContent = 'Jet Village 2 · 0.1.1 · carregando…';
+if (hud) hud.textContent = 'Jet Village 2 · 0.1.2 · carregando…';
 
 const clock: Clock = { now: () => performance.now() };
 const renderer = new Canvas2DRenderer(canvasEl, DEFAULT_VIEWPORT_REFS, '#1a1721');
@@ -58,12 +58,32 @@ async function loadCityTiles(): Promise<void> {
   renderer.registerTexture(ASSET_IDS.cityTilesTexture, image);
 }
 
+async function loadWarrior(): Promise<void> {
+  const atlas = await loadJson<SpriteAtlasData>(publicAssetUrl('assets/sprites/warrior.json'));
+  if (atlas.frameSize.w <= 0 || atlas.frameSize.h <= 0) {
+    throw new Error('Invalid warrior atlas frameSize');
+  }
+  const imagePath = atlas.image.replace(/^\/+/, '');
+  const imageUrl = publicAssetUrl(
+    imagePath.startsWith('assets/') ? imagePath : `assets/sprites/${imagePath}`,
+  );
+  const image = await loadImage(imageUrl);
+  assets.setAtlas(ASSET_IDS.warriorAtlas, atlas);
+  assets.setTexture(ASSET_IDS.warriorTexture, {
+    width: image.naturalWidth,
+    height: image.naturalHeight,
+  });
+  renderer.registerTexture(ASSET_IDS.warriorTexture, image);
+}
+
 async function boot(): Promise<void> {
-  await loadCityTiles();
+  await Promise.all([loadCityTiles(), loadWarrior()]);
   const city = new CityScene(renderer, input, assets);
   const ok = await scenes.switchTo(city);
   if (!ok) return;
-  if (hud) hud.textContent = 'Jet Village 2 · WASD · Space ataque · K morte';
+  if (hud) {
+    hud.textContent = 'Jet Village 2 · WASD · Shift correr · C sentar · Space ataque · K morte';
+  }
 
   const frame = (): void => {
     loop.tick();

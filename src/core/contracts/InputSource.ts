@@ -1,6 +1,6 @@
 /**
  * Semantic game actions — systems never see keycodes.
- * Attack / KillDebug for 0.1.0; expand later for multiplayer intents.
+ * 0.1.2: Run / Sit added for warrior locomotion.
  */
 export enum GameAction {
   MoveUp = 'MoveUp',
@@ -8,6 +8,10 @@ export enum GameAction {
   MoveLeft = 'MoveLeft',
   MoveRight = 'MoveRight',
   Attack = 'Attack',
+  /** Hold to run (faster move + run clip). */
+  Run = 'Run',
+  /** Hold to sit (blocks movement + sit clip). */
+  Sit = 'Sit',
   /** Debug: force death animation (K). */
   KillDebug = 'KillDebug',
 }

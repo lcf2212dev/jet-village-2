@@ -17,9 +17,13 @@ export interface PlayerIntent {
   moveY: number;
   attackPressed: boolean;
   killPressed: boolean;
+  /** Hold run modifier (Shift). */
+  runHeld: boolean;
+  /** Hold sit (C) — blocks movement while true. */
+  sitHeld: boolean;
 }
 
-export type AnimState = 'idle' | 'walk' | 'attack' | 'death';
+export type AnimState = 'idle' | 'walk' | 'run' | 'attack' | 'sit' | 'death';
 
 export interface SpriteAnimation {
   state: AnimState;

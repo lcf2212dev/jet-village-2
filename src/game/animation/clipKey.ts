@@ -25,6 +25,9 @@ export function resolveClip(
     if (has(tryV)) return tryV;
   }
 
+  // State-level fallbacks
+  if (state === 'run' && has(clipKey('walk', direction))) return clipKey('walk', direction);
+  if (state === 'sit' && has(clipKey('idle', direction))) return clipKey('idle', direction);
   if (state === 'death' && has('death-down')) return 'death-down';
   if (has(`${state}-down`)) return `${state}-down`;
   return primary;

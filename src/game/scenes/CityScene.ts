@@ -66,6 +66,9 @@ export class CityScene implements Scene {
     }
     // throws if missing
     this.assets.tileset(ASSET_IDS.cityTileset);
+    if (!this.assets.hasAtlas(ASSET_IDS.warriorAtlas) || !this.assets.hasTexture(ASSET_IDS.warriorTexture)) {
+      throw new Error(`Missing warrior atlas/texture: ${ASSET_IDS.warriorAtlas}`);
+    }
 
     this.renderSystem = new RenderSystem(this.renderer, this.map, this.camera, this.assets);
     this.world.addSystem(this.renderSystem);
@@ -83,6 +86,8 @@ export class CityScene implements Scene {
       moveY: 0,
       attackPressed: false,
       killPressed: false,
+      runHeld: false,
+      sitHeld: false,
     });
     this.world.add(this.player, ColliderKey, { ox: -6, oy: -4, w: 12, h: 8 });
     this.world.add(this.player, HealthKey, { hp: 10, maxHp: 10 });

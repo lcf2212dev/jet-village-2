@@ -82,7 +82,8 @@ async function boot(): Promise<void> {
   const ok = await scenes.switchTo(city);
   if (!ok) return;
   if (hud) {
-    hud.textContent = 'Jet Village 2 · WASD · Shift correr · C sentar · Space ataque · K morte';
+    hud.textContent =
+      'Jet Village 2 · 0.1.2 · WASD andar · Shift correr · C sentar · Space ataque · K morte';
   }
 
   const frame = (): void => {

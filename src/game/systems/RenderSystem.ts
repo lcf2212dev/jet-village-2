@@ -10,7 +10,7 @@ import type { Camera } from '../world/Camera';
 import type { TileMap } from '../world/TileMap';
 
 /** Display height for warrior sprite in world pixels (width scales with frame aspect). */
-const WARRIOR_DRAW_H = 40;
+const WARRIOR_DRAW_H = 52;
 
 /** order 100 — draw map tiles + entities. */
 export class RenderSystem implements System {
@@ -50,8 +50,7 @@ export class RenderSystem implements System {
       this.drawEntity(t.x, t.y, anim);
     }
 
-    this.renderer.drawText('Jet Village 2 · 0.1.2', 8, 14, '#eef0f2');
-    this.renderer.drawText('WASD · Shift run · C sit · Space attack · K death', 8, 26, '#8a92a3');
+    // HUD lives in DOM (#hud) — avoid double text on the canvas.
     this.renderer.end();
   }
 
